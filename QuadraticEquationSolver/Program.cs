@@ -4,7 +4,7 @@ namespace QuadraticEquationSolver
 {
     class Program
     {
-        static void EquationSolver()
+        static string EquationSolver()
         {
             int a, b, c, result;
             // Equation formula: 
@@ -18,15 +18,20 @@ namespace QuadraticEquationSolver
             {
                 double[] x = new double[2];
 
-                Console.WriteLine("{0}x^2 {1}x {2} = 0", a, (b < 0) ? "- " + (b * (-1)) : "+ " + b, (c < 0) ? "- " + c : "+ " + c);
+                Console.WriteLine("{0}x^2 {1}x {2} = 0", a, (b < 0) ? "- " + (b * (-1)) : "+ " + b, (c < 0) ? "- " + (c * (-1)) : "+ " + c);
                 // get squareroot
+
                 var squareRoot = Math.Sqrt(Math.Pow(b, 2) - 4 * a * c);
+                if (double.IsNaN(squareRoot))
+                {
+                    return "Root is negative";
+                }
                 var divider = 2 * a;
 
                 x[0] = (-b + squareRoot) / divider;
                 x[1] = (-b - squareRoot) / divider;
 
-                PrintEquation(0,x);
+                return PrintEquation(0, x);
             }
             else if (b == 0)
             {
@@ -38,7 +43,11 @@ namespace QuadraticEquationSolver
                 var divide = c / a;
                 x[0] = Math.Sqrt(divide);
 
-                PrintEquation(1,x);
+                if (double.IsNaN(x[0]))
+                {
+                    return "Root is negative";
+                }
+                return PrintEquation(1, x);
             }
             else if (c == 0)
             {
@@ -59,33 +68,36 @@ namespace QuadraticEquationSolver
                     x[1] += result;
                 }
 
-                PrintEquation(2, x);
+                return PrintEquation(2, x);
             }
+            return "Equation is not quadratic equation";
         }
 
-        static void PrintEquation(int print, double[] x)
+        static string PrintEquation(int print, double[] x)
         {
+            string equation = "";
             switch (print)
             {
                 case 0:
                     // if both x:s are equal
                     if (x[0].Equals(x[1]))
-                        Console.WriteLine("x: {0}", x[0]);
+                        equation = $"x: {x[0]}";
                     else
-                        Console.WriteLine("x1: {0} and x2: {1}", x[0], x[1]);
+                        equation = $"x1: {x[0]} and x2: {x[1]}";
                     break;
                 case 1:
-                    Console.WriteLine("+-{0}", x[0]);
+                        equation = $"+-{x[0]}";
                     break;
                 case 2:
-                    Console.WriteLine("x = {0} or x = {1}", x[0], x[1]);
+                        equation = $"x = {x[0]} or x = {x[1]}";
                     break;
             }
+            return equation;
         }
 
         static void Main(string[] args)
         {
-            EquationSolver();
+            Console.WriteLine(EquationSolver());
         }
     }
 }
